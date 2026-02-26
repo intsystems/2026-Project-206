@@ -29,9 +29,12 @@
 - [Paper](paper/main.pdf)
 - [Slides](slides/main.pdf)
 
-## Abstract
+## Introduction
 
 Contemporary AI agent systems employ large language models (LLMs) as operators that interact with diverse tools to accomplish designated tasks. Such agent architectures typically incorporate multiple models with varying parameter counts, reflecting distinct complexity requirements. The selection of an optimal LLM for specific tools is commonly achieved through Reinforcement Learning from Human Feedback (RLHF), which facilitates adaptation to particular tools and tasks during the training process.
+
+
+## Abstract
 
 This study addresses the problem of tool complexity estimation as a means to automate and unify the development of AI agent architectures. Crucially, the complexity assessment is confined exclusively to the tools themselves, excluding any model-specific characteristics.
 
@@ -42,6 +45,10 @@ Two baseline approaches for tool complexity estimation are proposed:
 2. An intrinsic dimensionality derived from the tool description text, which serves as a proxy for tool complexity.
 
 The anticipated outcome involves a comparative analysis of RLHF convergence rates under two conditions: without prior information regarding tool complexity, and with prior information informed by the proposed complexity estimates.
+
+## Keywords
+
+AI agents, Large Language Models (LLMs), tool complexity estimation, API specifications, RLHF (Reinforcement Learning from Human Feedback), intrinsic dimensionality, LLM adaptation, tool documentation, agent architecture optimization
 
 ## Citation
 
