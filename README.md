@@ -1,8 +1,6 @@
 # Title
 
-<!-- Change `kisnikser/m1p-template` to `intsystems/your-repository`-->
-[![License](https://badgen.net/github/license/intsystems/2026-Project-206
-?color=green)](https://github.com/intsystems/2026-Project-206/blob/main/LICENSE)
+[![License](https://badgen.net/github/license/intsystems/2026-Project-206?color=green)](https://github.com/intsystems/2026-Project-206/blob/main/LICENSE)
 [![GitHub Contributors](https://img.shields.io/github/contributors/intsystems/2026-Project-206)](https://github.com/intsystems/2026-Project-206/graphs/contributors)
 [![GitHub Issues](https://img.shields.io/github/issues-closed/intsystems/2026-Project-206.svg?color=0088ff)](https://github.com/intsystems/2026-Project-206/issues)
 [![GitHub Pull Requests](https://img.shields.io/github/issues-pr-closed/intsystems/2026-Project-206.svg?color=7f29d6)](https://github.com/kisnikser/m1p-template/pulls)
