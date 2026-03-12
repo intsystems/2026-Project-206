@@ -1,4 +1,5 @@
-# Title
+# MM-Algorithm for Categorical Schrödinger Bridge Matching (CSBM)
+
 
 [![License](https://badgen.net/github/license/intsystems/2026-Project-206?color=green)](https://github.com/intsystems/2026-Project-206/blob/main/LICENSE)
 [![GitHub Contributors](https://img.shields.io/github/contributors/intsystems/2026-Project-206)](https://github.com/intsystems/2026-Project-206/graphs/contributors)
@@ -12,11 +13,11 @@
     </tr>
     <tr>
         <td align="left"> <b> Consultant </b> </td>
-        <td> Andrey Grabovoy, PhD </td>
+        <td> Grigoriy Ksenofontov,  </td>
     </tr>
     <tr>
         <td align="left"> <b> Advisor </b> </td>
-        <td> Andrey Grabovoy, PhD </td>
+        <td> Alexandr Korotin, PhD </td>
     </tr>
 </table>
 
@@ -29,35 +30,46 @@
 
 ## Introduction
 
-Contemporary AI agent systems employ large language models (LLMs) as operators that interact with diverse tools to accomplish designated tasks. Such agent architectures typically incorporate multiple models with varying parameter counts, reflecting distinct complexity requirements. The selection of an optimal LLM for specific tools is commonly achieved through Reinforcement Learning from Human Feedback (RLHF), which facilitates adaptation to particular tools and tasks during the training process.
+**Categorical Schrödinger Bridge Matching (CSBM)** — это мощный метод для решения задачи построения моста Шрёдингера (Schrödinger Bridge, SB) в дискретных пространствах, предложенный Ксенофонтовым и Коротиным (2025). Задача SB является фундаментальным инструментом для генеративного моделирования и непарного перевода между доменами. Она заключается в поиске наиболее вероятного случайного процесса, который интерполирует между двумя заданными распределениями вероятностей.
 
+В дискретно-временной итеративной процедуре согласования марковских процессов (D-IMF), используемой в CSBM, ключевая задача — обучить параметрический марковский процесс $q_\theta$, который максимально точно аппроксимирует истинное, но вычислительно недоступное решение SB. Это достигается минимизацией специфической функции потерь, выведенной из проекций D-IMF. Данная функция потерь, лежащая в основе обучения CSBM, определяется как:
+
+$$
+\mathcal{L}(\theta) = \mathbb{E}_{q(x_0, x_1)} \left[ \sum_{n=1}^N \mathbb{E}_{q^{\text{ref}}(x_{t_{n-1}}|x_0, x_1)} \left[ \text{KL}(q^{\text{ref}}(x_{t_n}|x_{t_{n-1}}, x_1) \| q_\theta(x_{t_n}|x_{t_{n-1}})) \right] - \mathbb{E}_{q^{\text{ref}}(x_{t_N}|x_0, x_1)} [\log q_\theta(x_1|x_{t_N})] \right] (1)
+$$
+
+В оригинальной работе эта функция потерь оптимизируется с помощью стохастического градиентного спуска (SGD). Несмотря на эффективность, такой подход сопряжен с рядом проблем: чувствительностью к выбору скорости обучения, шумом, вызванным аппроксимацией мини-батчами, и необходимостью тщательного подбора гиперпараметров.
 
 ## Abstract
 
-This study addresses the problem of tool complexity estimation as a means to automate and unify the development of AI agent architectures. Crucially, the complexity assessment is confined exclusively to the tools themselves, excluding any model-specific characteristics.
+В данном исследовании мы фокусируемся на решении задачи оптимизации loss - а (1), описанного выше при помощи MM алгоритма.
 
-The instrumental data utilized for complexity estimation comprises tool documentation texts and the structural specifications of permissible API requests.
+Для оценок в MM алгоритме будет использоваться ELBO ($v(x_1)$) и  [Bohning upper bound](https://www.cs.ubc.ca/~murphyk/papers/nips2010.pdf) для $c(x_0)$
 
-Two baseline approaches for tool complexity estimation are proposed:
-1. A complexity metric based on numerical characteristics of the API specification, such as the dimensionality of the argument space that the model must supply to the tools;
-2. An intrinsic dimensionality derived from the tool description text, which serves as a proxy for tool complexity.
+Обозначения (v и c) взяты из данной [статьи](https://arxiv.org/pdf/2509.23348)
 
-The anticipated outcome involves a comparative analysis of RLHF convergence rates under two conditions: without prior information regarding tool complexity, and with prior information informed by the proposed complexity estimates.
+Вот сокращенная версия аннотации с сохранением всех ключевых моментов:
+
+---
+
+## Аннотация
+
+Мы предлагаем новый метод оптимизации функции потерь CSBM, основанный на **MM-алгоритме**, который устраняет недостатки SGD: чувствительность к гиперпараметрам и шум градиентных оценок.
+
+Ключевая идея — построение суррогатной функции потерь как верхней границы исходной целевой функции. Это достигается введением вариационных параметров и применением двух границ:
+1. **ELBO** — для компонентов, зависящих от $v(x_1)$;
+2. **Границы Бонинга** (Khan et al., 2010) — для компонентов, связанных с $ c(x_0) $, что дает квадратичную аппроксимацию log-sum-exp.
+
+Полученная суррогатная функция оптимизируется чередующимся алгоритмом с **аналитическими обновлениями**:
+* **E-шаг:** вычисление оптимальных вариационных параметров при фиксированных $ \theta $;
+* **M-шаг:** обновление $ \theta $ в замкнутой форме при фиксированных вариационных параметрах.
+
+Итеративная процедура полностью исключает SGD, шум мини-батчей и подбор скорости обучения. Все обновления параметров становятся детерминированными и сводятся к простым аналитическим пересчетам.
 
 ## Keywords
 
-AI agents, Large Language Models (LLMs), tool complexity estimation, API specifications, RLHF (Reinforcement Learning from Human Feedback), intrinsic dimensionality, LLM adaptation, tool documentation, agent architecture optimization
+Categorical Schrödinger Bridge, CSBM, мост Шрёдингера, энтропийный оптимальный транспорт, дискретные диффузионные модели, MM-алгоритм, миноризация-максимизация, вариационный вывод, нижняя граница правдоподобия, ELBO, граница Бонинга, квадратичная граница, детерминированная оптимизация, аналитические обновления, непарный перевод между доменами, генеративное моделирование.
 
-## Citation
-
-If you find our work helpful, please cite us.
-```BibTeX
-@article{citekey,
-    title={Title},
-    author={Name Surname, Name Surname (consultant), Name Surname (advisor)},
-    year={2025}
-}
-```
 
 ## Licence
 
