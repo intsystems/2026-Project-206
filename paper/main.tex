@@ -44,7 +44,7 @@
 %%%
 
 
-\title{Title}
+\title{MM-Algorithm for Categorical Schrödinger Bridge Matching (CSBM)}
 
 
 % The \author macro works with any number of authors. There are two commands
@@ -57,13 +57,18 @@
 
 
 \author{
-  Name Surname\\
+  Fedor Kolotilin\\
   MIPT\\
   Moscow, Russia\\
   \texttt{email@phystech.edu}\\
   \And
-  Name Surname\\
-  MIPT\\
+  Grigoriy Ksenofontov\\
+  Consultant\\
+  Moscow, Russia\\
+  \texttt{email@phystech.edu}\\
+  \AND
+  Alexandr Korotin, PhD\\
+  Advisor\\
   Moscow, Russia\\
   \texttt{email@phystech.edu}\\
 }
@@ -75,20 +80,37 @@
 \maketitle
 
 \begin{abstract}
-    TODO
+    Задача мостов Шрёдингера играет важную роль в современном машинном обучении, позволяя решать задачи генеративного моделирования при помощи теории оптимального транспорта. Как в непрерывной так и в дискретной постановке этой задачи есть метод LightSB, сводящий задачу к оптимизации лосса (8, \cite{korotin2024light}):
+    
+    $$
+    KL(q^* \| q_\theta) = \mathcal{L}(\theta) - \mathcal{L}^*,
+    $$
+    
+    где
+    
+    $$
+    \mathcal{L}(\theta) = \mathbb{E}_{p_0(x_0)} \left[ \log c_\theta(x_0) \right] - \mathbb{E}_{p_1(x_1)} \left[ \log v_\theta(x_1) \right],
+    \tag{17}
+    $$
+    
+    и $\mathcal{L}^* \in \mathbb{R}$ является константой, не зависящей от $\theta$, поэтому её можно опустить.
+    
+    В данной работе мы предлагаем новый метод оптимизации данной функции потерь, основанный на MM-алгоритме, который устраняет недостатки SGD: необходимость подбора гиперпараметров и шум градиентных оценок. Ключевая идея — построение суррогатной функции потерь как верхней границы исходной целевой функции. Это достигается введением вариационных параметров и применением двух границ: ELBO — для компонентов, зависящих от $v(x_1)$, и границы Бонинга \cite{boehning2010} — для компонентов, связанных с $c(x_0)$. Полученная суррогатная функция оптимизируется чередующимся алгоритмом с аналитическими обновлениями: E-шаг (вычисление оптимальных вариационных параметров при фиксированных $\theta$) и M-шаг (обновление $\theta$ в замкнутой форме при фиксированных вариационных параметрах). Итеративная процедура полностью исключает SGD, шум мини-батчей и подбор скорости обучения. Все обновления параметров становятся детерминированными и сводятся к простым аналитическим пересчетам.
 \end{abstract}
 
-\textbf{Keywords:} TODO
+\textbf{Keywords:} Categorical Schrödinger Bridge, CSBM, мост Шрёдингера, энтропийный оптимальный транспорт, дискретные диффузионные модели, MM-алгоритм, миноризация-максимизация, вариационный вывод, нижняя граница правдоподобия, ELBO, граница Бонинга, квадратичная граница, детерминированная оптимизация, аналитические обновления, непарный перевод между доменами, генеративное моделирование.
 
 \section{Introduction}\label{sec:intro}
 
-TODO
+Categorical Schrödinger Bridge Matching (CSBM) — это метод для решения задачи построения моста Шрёдингера (Schrödinger Bridge, SB) в дискретных пространствах, предложенный Ксенофонтовым и Коротиным (2025) \cite{ksenofontov2025}. Задача SB является фундаментальным инструментом для генеративного моделирования и непарного перевода между доменами. Она заключается в поиске наиболее вероятного случайного процесса, который интерполирует между двумя заданными распределениями вероятностей.
+
+Задачи энтропийного оптимального транспорта (EOT) и моста Шрёдингера (SB) привлекают внимание в машинном обучении благодаря приложениям в генеративном моделировании, при этом разработано множество методов для непрерывных пространств \cite{daniels2021, gushchin2023a, mokrov2024, vargas2021, chen2021, shi2023, debortoli2024, korotin2024, gushchin2024a}. Однако многие реальные данные дискретны (текст — \cite{austin2021, gat2024}; молекулярные графы — \cite{vignac2022, qin2024, luo2024}; белки — \cite{campbell2024}; векторно-квантованные представления — \cite{vandenoord2017, esser2021}). Несмотря на прогресс в дискретных диффузионных моделях \cite{hoogeboom2021, austin2021, campbell2022, lou2023, sahoo2024, campbell2024, gat2024}, существующие подходы к EOT/SB в дискретных пространствах ограничены первыми работами \cite{kim2024, ksenofontov2025}, и практические, широко применимые решатели по-прежнему отсутствуют.
 
 \textbf{Contributions.} Our contributions can be summarized as follows:
 \begin{itemize}
-    \item We present...
-    \item We demonstrate the validity of our theoretical results through empirical studies...
-    \item We highlight the implications of our findings for...
+    \item We present a novel optimization method for the LightSB loss function based on the MM-algorithm, eliminating the drawbacks of SGD such as hyperparameter tuning and gradient noise.
+    \item We demonstrate the validity of our theoretical results through empirical studies on discrete data domains.
+    \item We highlight the implications of our findings for advancing the practical applicability of Schrödinger Bridge solvers in categorical settings.
 \end{itemize}
 
 \textbf{Outline.} The rest of the paper is organized as follows...
