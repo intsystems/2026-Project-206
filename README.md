@@ -1,4 +1,4 @@
-# MM-Algorithm for Categorical Schrödinger Bridge Matching (CSBM)
+# Light Schrödinger Bridge via closed - form optimization on discrete spaces
 
 
 [![License](https://badgen.net/github/license/intsystems/2026-Project-206?color=green)](https://github.com/intsystems/2026-Project-206/blob/main/LICENSE)
